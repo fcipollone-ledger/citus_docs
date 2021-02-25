@@ -222,6 +222,19 @@ The default value for this GUC is 'on'.
 Planner Configuration
 ------------------------------------------------
 
+citus.local_table_join_policy (enum)
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Sets how citus should plan local and distributed table joins. Citus might need to move a lot of data to support this type of join, and changing the default mode can help reduce this transfer amount in some cases. There are four modes available:
+
+* **auto:** (Default) Citus will convert either all local or distributed tables to support local and distributed table joins. If all the distributed tables have a constant filter on a unique index(such as primary key) then distributed tables will be converted. This will ensure less amount of data moving around workers.
+
+* **never:** Citus will not plan local and distributed table joins.
+
+* **prefer-local:** Citus will prefer converting local tables to support local and distributed table joins. The converted table will be sent to necessary nodes as an intermediate result.
+
+* **prefer-distributed:** Citus will prefer converting distributed tables to support local and distributed table joins. The converted table will be sent to necessary nodes as an intermediate result. If distributed tables are huge, using this option might result in moving lots of data around workers.
+
 citus.limit_clause_row_fetch_count (integer)
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
